@@ -38,7 +38,7 @@ class Execute extends Module {
 
   // lab3(Execute) begin
   // Connect the ALU control signals to the ALU
-  alu.io.func := alu_ctrl.io.alu_func
+  alu.io.func := alu_ctrl.io.alu_funct
   alu.io.op1 := Mux(io.aluop1_source === ALUOp1Source.Register, io.reg1_data, io.instruction_address)
   alu.io.op2 := Mux(io.aluop2_source === ALUOp2Source.Immediate, io.immediate, io.reg2_data)
 
