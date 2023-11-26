@@ -40,6 +40,7 @@ class CPU extends Module {
 
   // lab3(cpu) begin
   // Connect InstructionDecode outputs to Execute inputs
+  ex.io.instruction_address := inst_fetch.io.instruction_address
   ex.io.aluop1_source := id.io.ex_aluop1_source
   ex.io.aluop2_source := id.io.ex_aluop2_source
   ex.io.reg1_data := regs.io.read_data1
