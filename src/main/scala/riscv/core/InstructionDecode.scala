@@ -195,7 +195,20 @@ class InstructionDecode extends Module {
   )
 
   // lab3(InstructionDecode) begin
+  // Set memory write enable for S-type (store) instructions
+  io.memory_write_enable := opcode === InstructionTypes.S
 
+  // Set memory read enable for L-type (load) instructions
+  io.memory_read_enable := opcode === InstructionTypes.L
+
+  // Set the reg_write_enable based on the instruction type
+  io.reg_write_enable := opcode === InstructionTypes.RM || opcode === InstructionTypes.I ||
+    opcode === InstructionTypes.L || opcode === Instructions.auipc || 
+    opcode === Instructions.lui || opcode === Instructions.jal || 
+    opcode === Instructions.jalr
+
+  // Set the reg_write_address based on the instruction's destination register field
+  io.reg_write_address := rd
   // lab3(InstructionDecode) end
 
   io.wb_reg_write_source := MuxCase(
