@@ -20,27 +20,29 @@ import riscv.TestAnnotations
 class InstructionFetchTest extends AnyFlatSpec with ChiselScalatestTester {
   behavior.of("InstructionFetch of Single Cycle CPU")
   it should "fetch instruction" in {
-  test(new InstructionFetch).withAnnotations(TestAnnotations.annos) { c =>
-    val entry = 0x1000
-    var pre   = entry
-    var cur   = pre
-    c.io.instruction_valid.poke(true.B)
-    for (x <- 0 to 100) {
-      Random.nextInt(2) match {
-        case 0 => // no jump
-          cur = pre + 4
-          c.io.jump_flag_id.poke(false.B)
-          c.clock.step()
-          c.io.instruction_address.expect(cur.U) // Ensure the expected value is an unsigned integer
-          pre = cur
-        case 1 => // jump
-          c.io.jump_flag_id.poke(true.B)
-          c.io.jump_address_id.poke(entry.U) // Ensure the jump address is an unsigned integer
-          c.clock.step()
-          c.io.instruction_address.expect(entry.U) // Ensure the expected value is an unsigned integer
-          pre = entry
-       }
-     }
-   }
- }
+    test(new InstructionFetch).withAnnotations(TestAnnotations.annos) { c =>
+      val entry = 0x1000
+      var pre   = entry
+      var cur   = pre
+      c.io.instruction_valid.poke(true.B)
+      var x = 0
+      for (x <- 0 to 100) {
+        Random.nextInt(2) match {
+          case 0 => // no jump
+            cur = pre + 4
+            c.io.jump_flag_id.poke(false.B)
+            c.clock.step()
+            c.io.instruction_address.expect(cur)
+            pre = pre + 4
+          case 1 => // jump
+            c.io.jump_flag_id.poke(true.B)
+            c.io.jump_address_id.poke(entry)
+            c.clock.step()
+            c.io.instruction_address.expect(entry)
+            pre = entry
+        }
+      }
+
+    }
+  }
 }
