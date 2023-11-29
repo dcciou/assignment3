@@ -113,3 +113,24 @@ class ByteAccessTest extends AnyFlatSpec with ChiselScalatestTester {
     }
   }
 }
+class HW2Test extends AnyFlatSpec with ChiselScalatestTester {
+  behavior.of("Single Cycle CPU")
+  it should "execute hw2.s correctly" in {
+    test(new TestTopModule("hw2.asmbin")).withAnnotations(TestAnnotations.annos) { c =>
+      // Your specific testing logic goes here
+      // For example, you might want to step the clock and check specific memory addresses
+      // or register values that would contain the result of hw2.s execution
+
+      // Example of clock stepping and checking a memory address
+      for (i <- 1 to 100) { // The range and number of steps depend on your specific test case
+        c.clock.step(100)
+        c.io.mem_debug_read_address.poke((i * 4).U) // Example address to check
+        c.clock.step()
+        // Check the expected value at this address
+        // This will depend on what hw2.s is supposed to do
+        c.io.mem_debug_read_data.expect(expectedValue.U)
+      }
+    }
+  }
+}
+
