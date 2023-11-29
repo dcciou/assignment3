@@ -115,21 +115,28 @@ class ByteAccessTest extends AnyFlatSpec with ChiselScalatestTester {
 }
 class HW2Test extends AnyFlatSpec with ChiselScalatestTester {
   behavior.of("Single Cycle CPU")
-  it should "execute hw2.s correctly" in {
-    test(new TestTopModule("hw2.asmbin")).withAnnotations(TestAnnotations.annos) { c =>
-      // Your specific testing logic goes here
-      // For example, you might want to step the clock and check specific memory addresses
-      // or register values that would contain the result of hw2.s execution
 
-      // Example of clock stepping and checking a memory address
-      for (i <- 1 to 100) { // The range and number of steps depend on your specific test case
-        c.clock.step(100)
-        c.io.mem_debug_read_address.poke((i * 4).U) // Example address to check
+  it should "find the leftmost zero byte" in {
+    test(new TestTopModule("hw2.asmbin")).withAnnotations(TestAnnotations.annos) { c =>
+      // Assuming the program takes a fixed number of cycles to execute
+      // which you would need to determine
+      for (_ <- 0 until 10000) {
         c.clock.step()
-        // Check the expected value at this address
-        // This will depend on what hw2.s is supposed to do
-        c.io.mem_debug_read_data.expect(expectedValue.U)
       }
+
+      // Now check the memory locations where the results are expected to be stored
+      // The expected values are based on the logic of your assembly code
+      c.io.mem_debug_read_address.poke(12.U)
+      c.clock.step()
+      c.io.mem_debug_read_data.expect(5.U) // the leftmost zero byte of 0x1122334455007700
+
+      c.io.mem_debug_read_address.poke(8.U)
+      c.clock.step()
+      c.io.mem_debug_read_data.expect(8.U) // the leftmost zero byte of 0x0123456789abcdef
+
+      c.io.mem_debug_read_address.poke(4.U)
+      c.clock.step()
+      c.io.mem_debug_read_data.expect(1.U) // the leftmost zero byte of 0x1100220033445566
     }
   }
 }
