@@ -1,8 +1,5 @@
 .data
     test: .word 0,1067057152,1075052544                         #true t0=0x3f99999a
-    str: .string "How many '1's are there in BF16 (binary)? ANS : "
-    str_z: .string "data = 0 \n"
-    str_ion: .string "data= Nan or infinity \n"
 .text
 main:
     la a1, test    
@@ -44,27 +41,16 @@ count_ones:
     and  t6, t6, t1                                 #*p &= (*p - 1)
     addi a6, a6, 1                                  #count++,a6
     bne  t6, zero, count_ones                       #if t6!=0 goto loop                                            
-    
-    la a0, str                                      #print How many '1's are there in BF16 (binary)? ANS :
-    li a7, 4
-    ecall   
-    
-    mv a0, a6                                       #print how many 1
-    li a7, 1
-    ecall  
+     
                     
     bnez t0, loop                                   
     beqz t0, end
 end_z:
-    la a0, str_z
-    li a7, 4
-    ecall
+
     bnez t0, loop
     beqz t0, end
 end_ion:
-    la a0, str_ion
-    li a7, 4
-    ecall
+
     bnez t0, loop
     beqz t0, end
 end:
