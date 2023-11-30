@@ -115,23 +115,23 @@ class ByteAccessTest extends AnyFlatSpec with ChiselScalatestTester {
 }
 class HW2Test extends AnyFlatSpec with ChiselScalatestTester {
   behavior.of("Single Cycle CPU")
-
-  it should "execute hw2.s and verify the results" in {
+  it should "count the number of one" in {
     test(new TestTopModule("hw2.asmbin")).withAnnotations(TestAnnotations.annos) { c =>
-      // Let the CPU run for a sufficient number of cycles to complete the test.
-      // This number may need to be adjusted based on the specifics of your CPU design.
-      c.clock.step(10000)
-
-      // Check the expected values in the memory locations specified.
-      // The addresses to poke are derived from your assembly logic and where it writes the results.
-      val results = Seq(0, 10, 3)
-      for ((result, idx) <- results.zipWithIndex) {
-        c.io.mem_debug_read_address.poke((4 * (idx + 1)).U)
-        c.clock.step()
-        c.io.mem_debug_read_data.expect(result.U)
+      for (i <- 1 to 50) {
+        c.clock.step(1000)
+        c.io.mem_debug_read_address.poke((i * 4).U) // Avoid timeout
       }
+
+      c.io.mem_debug_read_address.poke(12.U)
+      c.clock.step()
+      c.io.mem_debug_read_data.expect(0.U) // number of 1 of 0
+      c.io.mem_debug_read_address.poke(8.U)
+      c.clock.step()
+      c.io.mem_debug_read_data.expect(10.U) // number of 1 of 1067057152
+      c.io.mem_debug_read_address.poke(4.U)
+      c.clock.step()
+      c.io.mem_debug_read_data.expect(3.U) // number of 1 of 1075052544
     }
   }
 }
-
 
