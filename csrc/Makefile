@@ -14,6 +14,9 @@ OBJCOPY := $(CROSS_COMPILE)objcopy
 %.elf: %.S
 	$(AS) -R $(ASFLAGS) -o $(@:.elf=.o) $<
 	$(CROSS_COMPILE)ld -o $@ -T link.lds $(LDFLAGS) $(@:.elf=.o)
+%.elf: %.s
+	$(AS) -R $(ASFLAGS) -o $(@:.elf=.o) $<
+	$(CROSS_COMPILE)ld -o $@ -T link.lds $(LDFLAGS) $(@:.elf=.o)
 %.elf: %.c init.o
 	$(CC) $(CFLAGS) -c -o $(@:.elf=.o) $<
 	$(CROSS_COMPILE)ld -o $@ -T link.lds $(LDFLAGS) $(@:.elf=.o) init.o
