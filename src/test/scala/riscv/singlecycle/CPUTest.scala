@@ -124,10 +124,10 @@ class HW2Test extends AnyFlatSpec with ChiselScalatestTester {
 
       c.io.mem_debug_read_address.poke(8.U)
       c.clock.step()
-      c.io.mem_debug_read_data.expect(0xa.U) // number of 1 of 0
+      c.io.mem_debug_read_data.expect(0x3.U) // number of 1 of 0
       c.io.mem_debug_read_address.poke(4.U)
       c.clock.step()
-      c.io.mem_debug_read_data.expect(0x3.U) // number of 1 of 1067057152
+      c.io.mem_debug_read_data.expect(0xa.U) // number of 1 of 1067057152
       c.io.mem_debug_read_address.poke(0.U)
       c.clock.step()
       c.io.mem_debug_read_data.expect(0x0.U) // number of 1 of 1075052544
