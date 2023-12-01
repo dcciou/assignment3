@@ -4,6 +4,7 @@
 main:
     la a1, test    
     addi t0, zero,3                                 #set count =3       
+     li sp, 0x0C
 loop:
     lw a2, 0(a1)                                    #load data
     li t1, 0x7F800000
@@ -42,12 +43,16 @@ count_ones:
     addi a6, a6, 1                                  #count++,a6
     bne  t6, zero, count_ones                       #if t6!=0 goto loop                                            
      
+    sw a6, 0(sp)     
+    addi sp, sp, -4
                     
-    bnez t0, loop                                   
+    bnez t0, loop                       
     beqz t0, end
 end_z:
-
+    
     bnez t0, loop
+    sw a6, 0(sp)     
+    addi sp, sp, -4
     beqz t0, end
 end_ion:
 
